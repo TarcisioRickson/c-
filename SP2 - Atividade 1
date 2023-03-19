@@ -1,0 +1,117 @@
+using System;
+
+namespace ControleClientes
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Console.WriteLine("Cadastro de clientes\n");
+
+            Console.WriteLine("Informe o nome do cliente:");
+            string nome = Console.ReadLine();
+
+            Console.WriteLine("Informe o tipo de cliente (1 - Pessoa Física | 2 - Pessoa Jurídica):");
+            int tipoCliente = int.Parse(Console.ReadLine());
+
+            if (tipoCliente == 1)
+            {
+                Console.WriteLine("Informe o CPF do cliente:");
+                string cpf = Console.ReadLine();
+
+                Console.WriteLine("Informe a data de nascimento do cliente (dd/mm/aaaa):");
+                DateTime dataNascimento = DateTime.Parse(Console.ReadLine());
+
+                PessoaFisica cliente = new PessoaFisica(nome, cpf, dataNascimento);
+
+                Console.WriteLine("\nDados do cliente:");
+                Console.WriteLine(cliente.ToString());
+                Console.WriteLine("\nImposto a pagar: R$ " + cliente.CalcularImposto().ToString("F2"));
+            }
+            else if (tipoCliente == 2)
+            {
+                Console.WriteLine("Informe o CNPJ do cliente:");
+                string cnpj = Console.ReadLine();
+
+                PessoaJuridica cliente = new PessoaJuridica(nome, cnpj);
+
+                Console.WriteLine("\nDados do cliente:");
+                Console.WriteLine(cliente.ToString());
+                Console.WriteLine("\nImposto a pagar: R$ " + cliente.CalcularImposto().ToString("F2"));
+            }
+            else
+            {
+                Console.WriteLine("Tipo de cliente inválido.");
+            }
+
+            Console.ReadKey();
+        }
+    }
+
+    abstract class Cliente
+    {
+        public string Nome { get; set; }
+        public double ValorCompra { get; set; }
+
+        public abstract double CalcularImposto();
+
+        public override string ToString()
+        {
+            return "Nome: " + Nome + "\nValor da compra: R$ " + ValorCompra.ToString("F2");
+        }
+    }
+
+    class PessoaFisica : Cliente
+    {
+        public string CPF { get; set; }
+        public DateTime DataNascimento { get; set; }
+
+        public PessoaFisica(string nome, string cpf, DateTime dataNascimento)
+        {
+            Nome = nome;
+            CPF = cpf;
+            DataNascimento = dataNascimento;
+        }
+
+        public override double CalcularImposto()
+        {
+            double imposto = ValorCompra * 0.1;
+            if (DateTime.Now.Year - DataNascimento.Year >= 60)
+            {
+                imposto *= 0.5;
+            }
+            return imposto;
+        }
+
+        public override string ToString()
+        {
+            return base.ToString() + "\nCPF: " + CPF + "\nData de nascimento: " + DataNascimento.ToString("dd/MM/yyyy");
+        }
+    }
+
+    class PessoaJuridica : Cliente
+    {
+        public string CNPJ { get; set; }
+
+        public PessoaJuridica(string nome, string cnpj)
+        {
+            Nome = nome;
+            CNPJ = cnpj;
+        }
+
+        public override double CalcularImposto()
+        {
+            double imposto = ValorCompra * 0.2;
+            if (ValorCompra > 10000)
+            {
+                imposto += 500;
+            }
+            return imposto;
+        }
+
+        public override string ToString()
+        {
+            return base.ToString() + "\nCNPJ: " + CNPJ;
+        }
+    }
+}
