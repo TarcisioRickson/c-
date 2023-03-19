@@ -1,0 +1,95 @@
+// Models/Cliente.cs
+
+using System.ComponentModel.DataAnnotations;
+
+namespace LH_Pet.Models
+{
+public class Cliente
+{
+public int Id { get; set; }
+
+    [Required(ErrorMessage = "O nome do cliente é obrigatório.")]
+    public string Nome { get; set; }
+
+    public string Email { get; set; }
+
+    [Required(ErrorMessage = "O telefone do cliente é obrigatório.")]
+    public string Telefone { get; set; }
+}
+}
+
+// Models/Fornecedor.cs
+
+using System.ComponentModel.DataAnnotations;
+
+namespace LH_Pet.Models
+{
+public class Fornecedor
+{
+public int Id { get; set; }
+
+    [Required(ErrorMessage = "O nome do fornecedor é obrigatório.")]
+    public string Nome { get; set; }
+
+    public string Email { get; set; }
+
+    [Required(ErrorMessage = "O telefone do fornecedor é obrigatório.")]
+    public string Telefone { get; set; }
+}
+}
+
+// Controllers/HomeController.cs
+
+using System.Collections.Generic;
+using System.Web.Mvc;
+using LH_Pet.Models;
+
+namespace LH_Pet.Controllers
+{
+public class HomeController : Controller
+{
+public ActionResult Index()
+{
+// Populando objetos de exemplo para Clientes e Fornecedores
+var clientes = new List<Cliente>
+{
+new Cliente { Nome = "João", Email = "joao@example.com", Telefone = "(11) 9999-8888" },
+new Cliente { Nome = "Maria", Email = "maria@example.com", Telefone = "(11) 7777-6666" },
+new Cliente { Nome = "José", Email = "jose@example.com", Telefone = "(11) 3333-2222" }
+};
+        var fornecedores = new List<Fornecedor>
+        {
+            new Fornecedor { Nome = "Fornecedor A", Email = "fornecedorA@example.com", Telefone = "(11) 1111-2222" },
+            new Fornecedor { Nome = "Fornecedor B", Email = "fornecedorB@example.com", Telefone = "(11) 4444-5555" },
+            new Fornecedor { Nome = "Fornecedor C", Email = "fornecedorC@example.com", Telefone = "(11) 8888-9999" }
+        };
+
+        // Passando as listas de Clientes e Fornecedores para a view
+        ViewBag.Clientes = clientes;
+        ViewBag.Fornecedores = fornecedores;
+
+        return View();
+    }
+}
+}
+
+// Views/Home/Index.cshtml
+
+@{
+ViewBag.Title = "LH-Pet";
+}
+
+<h2>Clientes</h2>
+<ul>
+    @foreach (var cliente in ViewBag.Clientes)
+    {
+        <li>@cliente.Nome - @cliente.Email - @cliente.Telefone</li>
+    }
+</ul>
+<h2>Fornecedores</h2>
+<ul>
+    @foreach (var fornecedor in ViewBag.Fornecedores)
+    {
+        <li>@fornecedor.Nome - @fornecedor.Email - @fornecedor.Telefone</li>
+    }
+</ul>
